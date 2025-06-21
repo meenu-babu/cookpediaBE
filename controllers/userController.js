@@ -1,33 +1,57 @@
-const users=require('../models/userModel')
-const bcrypt = require('bcrypt');
-
+const users = require('../models/userModel')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 // add user
-exports.addUserController=async(req,res)=>{
-    console.log("Inside userController")
+exports.addUserController = async (req, res) => {
+  console.log('Inside userController')
 
-    const {username,email,password}=req.body;
-    console.log(username,email,password)
+  const { username, email, password } = req.body
+  console.log(username, email, password)
 
-    const encryptedPwd=await bcrypt.hash(password,10);
-    console.log(encryptedPwd)
-    try {
-        const existingUser=await users.findOne({email:email})
-        if(existingUser){
-            res.status(406).json("user already exist")
-        }
-        else{
-            const newUser=new users({
-                username:username,
-                email:email,
-                password:encryptedPwd,
-                profilePic:''
-            })
-            await newUser.save()
-            res.status(201).json("User registered successfully!!")
-        }
-    } catch (error) {
-        res.status(401).json(error)
+  const encryptedPwd = await bcrypt.hash(password, 10)
+  console.log(encryptedPwd)
+  try {
+    const existingUser = await users.findOne({ email: email })
+    if (existingUser) {
+      res.status(406).json('user already exist')
+    } else {
+      const newUser = new users({
+        username: username,
+        email: email,
+        password: encryptedPwd,
+        profilePic: ''
+      })
+      await newUser.save()
+      res.status(201).json('User registered successfully!!')
     }
+  } catch (error) {
+    res.status(401).json(error)
+  }
+}
+// login user
 
+exports.loginUserController = async (req, res) => {
+  console.log('Inside login user controller')
+  const { email, password } = req.body
+  console.log(email, password)
+  try {
+    const existingUser = await users.findOne({ email: email })
+    if (existingUser) {
+      if (existingUser.role === 'User') {
+        const isUserPasswordMatch = bcrypt.compare(password, existingUser.password)
+        if (isUserPasswordMatch) {
+          //create jwt token
+          const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_PWD)
+          res.status(200).json({ user: existingUser, token: token })
+        } else {
+          res.status(404).json('Invalid password!!!')
+        }
+      }
+    } else {
+      res.status(404).json('Invalid Email')
+    }
+  } catch (error) {
+    res.status(406).json(error)
+  }
 }

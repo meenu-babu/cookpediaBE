@@ -13,7 +13,8 @@ router.post('/add-testimony',testimonyController.addTestimonyController)
 // register user
 router.post('/register',userController.addUserController)
 
-
+// login user
+router.post('/login',userController.loginUserController)
 
 
 

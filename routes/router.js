@@ -41,4 +41,19 @@ router.delete('/recipe/:id/remove',jwtMiddleware,saveRecipeController.removeSave
 //upload profile pic
 router.post('/user/edit',jwtMiddleware,userController.editUserController)
 
+// get all users
+router.get('/all-users',jwtMiddleware,userController.getAllUsersController)
+
+//get all download list
+router.get('/all-downloads',jwtMiddleware,downloadRecipeController.getAllDownloadListController)
+
+//get all feedbacks
+router.get('/all-feedbacks',jwtMiddleware,testimonyController.getAllFeedbackController)
+
+
+//update feedback status
+router.get('/feedback/:id/update',jwtMiddleware,testimonyController.updateFeedbackStatusController)
+
+//get all approved feedbacks
+router.get('/all-approved-feedback',testimonyController.getApprovedFeedbackController)
 module.exports=router;

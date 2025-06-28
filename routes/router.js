@@ -56,4 +56,43 @@ router.get('/feedback/:id/update',jwtMiddleware,testimonyController.updateFeedba
 
 //get all approved feedbacks
 router.get('/all-approved-feedback',testimonyController.getApprovedFeedbackController)
+
+
+//add recipe in admin panel
+router.post('/add-recipe',jwtMiddleware,recipeController.addRecipeController)
+
+//edit recipe in admin panel
+router.put('/recipe/:id/edit',jwtMiddleware,recipeController.updateRecipeController);
+
+// delete recipe in admin panel
+router.delete('/recipe/:id/delete',jwtMiddleware,recipeController.removeRecipeController)
+
 module.exports=router;
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
